@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import './App.css';
-
 
 class Converter extends Component {
   state={
@@ -11,7 +9,6 @@ class Converter extends Component {
     error: false    
   }
   
-
   componentDidMount() {    
     fetch(`http://data.fixer.io/api/latest?access_key=aa139048e9c95de99e9b37afc4acdf15&symbols=USD,CAD`, {
     })
