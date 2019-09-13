@@ -46,7 +46,16 @@ class Converter extends Component {
     }
   }
 
-  handleCurrChange = e => {    
+  handleFromChange = e => {
+    this.setState({ 
+      from: e.target.value,
+      amount: '',  
+      converted: '',
+      error: false
+    })    
+  }
+
+  handleToChange = e => {    
     this.setState({ 
       to: e.target.value ,
       amount: '',
@@ -117,7 +126,7 @@ class Converter extends Component {
             />
         </label>
         <label aria-label="Convert From">
-          <select name="from" value={this.state.from} onChange={this.handleCurrChange}>
+          <select name="from" value={this.state.from} onChange={this.handleFromChange}>
             <option value='CAD' name='CAD'>CAD </option>
             <option value='USD' name='USD'>USD </option>
             <option value='EUR' name='EUR'>EUR </option>
@@ -130,7 +139,7 @@ class Converter extends Component {
           <input value={this.state.converted} readOnly/>
         </label>
         <label aria-label="Convert From">
-        <select name="to" value={this.state.to} onChange={this.handleCurrChange}>
+        <select name="to" value={this.state.to} onChange={this.handleToChange}>
           <option value='CAD' name='CAD'>CAD </option>
           <option value='USD' name='USD'>USD </option>
           <option value='EUR' name='EUR'>EUR </option>
