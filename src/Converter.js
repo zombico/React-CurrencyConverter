@@ -39,74 +39,62 @@ class Converter extends Component {
   }
 
   handleInputChange = e => {
-    this.setState({ amount: e.target.value })
-    this.getValue( e.target.value)
+    const re = /^[0-9\b]+$/;
+    if (e.target.value === '' || re.test(e.target.value)) {
+      this.setState({ amount: e.target.value })        
+      this.getValue( e.target.value)
+    }
   }
 
-  handleFromChange = e => {
-    this.setState({ 
-      from: e.target.value,
-      amount: '',  
-      converted: '',
-      error: false
-    })
-    
-  }
-
-  handleToChange = e => {
-    this.getValue(this.state.amount)      
+  handleCurrChange = e => {    
     this.setState({ 
       to: e.target.value ,
       amount: '',
       converted: '',
       error: false    
-    })
-    
-    
-        
+    })                
   }
 
-  getValue = (e) => {            
-    console.log(e)
+  getValue = (e) => {                
     const z = this.state;    
     const { from, to } = z
-
     const req = from+to
+
     switch(req) {
-      case 'CADUSD':
-      console.log('cad to usd')      
-        let amtCadtoUsd = z.cadToUsd * e;
-        
+      case 'CADUSD':      
+        let amtCadtoUsd = z.cadToUsd * e;        
         this.setState({ converted: amtCadtoUsd.toFixed(3) })
         break
-      case 'USDCAD':
-      
+      case 'USDCAD':      
         let amtUsdtoCad = z.usdToCad * e;
         this.setState({ converted: amtUsdtoCad.toFixed(3) })
         break
-      case 'CADEUR':
-      
+      case 'CADEUR':      
         let amtCadtoEur = z.cadToEuro * e;
         this.setState({ converted: amtCadtoEur.toFixed(3) })
         break
-      case 'EURCAD':
-      
+      case 'EURCAD':      
         let amtEurtoCad = z.euroToCad * e;
         this.setState({ converted: amtEurtoCad.toFixed(3) })
         break
       case 'EURUSD':
-        let amtEurotoUsd = z.euroToUsd * e;
-      
+        let amtEurotoUsd = z.euroToUsd * e;      
         this.setState({ converted: amtEurotoUsd.toFixed(3) })
         break
       case 'USDEUR':
-        let amtUsdtoEuro = z.usdToEuro * e;
-      
+        let amtUsdtoEuro = z.usdToEuro * e;      
         this.setState({ converted: amtUsdtoEuro.toFixed(3) })
         break      
-      case 'USDUSD': {
-      
-        this.setState({ error: true })
+      case 'USDUSD': {             
+        this.setState({ converted: e })
+        break      
+      }
+      case 'CADCAD': {     
+        this.setState({ converted: e })
+        break      
+      }
+      case 'EUREUR': {     
+        this.setState({ converted: e })
         break      
       }
       default :
@@ -115,48 +103,43 @@ class Converter extends Component {
   }
 
   render() {
-
-  
   return (
     <section>      
       <div>
         <h1>Currency converter</h1>
         <label> Type in amount and select currency: <br/>
           <input 
+            autoFocus
             ref={input => input && input.focus()} 
-            name="amount" 
+            name="amount"             
             onChange={this.handleInputChange} 
             value={this.state.amount}
             />
         </label>
         <label aria-label="Convert From">
-          <select name="from" value={this.state.from} onChange={this.handleFromChange}>
+          <select name="from" value={this.state.from} onChange={this.handleCurrChange}>
             <option value='CAD' name='CAD'>CAD </option>
             <option value='USD' name='USD'>USD </option>
             <option value='EUR' name='EUR'>EUR </option>
-          </select>
-          { this.state.error && 
-            <span>Please select different currencies</span>
-          }
+          </select>          
         </label>
       </div>
-
 
       <div>
         <label> Converted Amount <br/>
           <input value={this.state.converted} readOnly/>
         </label>
         <label aria-label="Convert From">
-        <select name="to" value={this.state.to} onChange={this.handleToChange}>
+        <select name="to" value={this.state.to} onChange={this.handleCurrChange}>
           <option value='CAD' name='CAD'>CAD </option>
           <option value='USD' name='USD'>USD </option>
-            <option value='EUR' name='EUR'>EUR </option>
+          <option value='EUR' name='EUR'>EUR </option>
         </select>
         </label>
       </div>
 
       <br/><br/>
-      <a href="https://fixer.io/faq" target="_blank">Disclaimer</a>
+      <p className="disclaimer"><a href="https://fixer.io/faq" target="_blank">Disclaimer</a></p>
     </section>
   );
 }
