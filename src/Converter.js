@@ -9,30 +9,85 @@ class Converter extends Component {
     error: false    
   }
   
-  componentDidMount() {    
-    fetch(`http://data.fixer.io/api/latest?access_key=aa139048e9c95de99e9b37afc4acdf15&symbols=USD,CAD`, {
+  componentDidMount() { 
+    const today = new Date()
+    let date = today.getDate()
+    const day = today.getUTCDay() 
+    console.log(day)
+    let sundays = day === 0 && day !== 6 ? date - 2 : day
+    let saturdays = day === 6 && day !== 0 ? date - 1 : day
+    let weekend = day === 0 ? sundays : saturdays;
+    let latestDay = day === 0 || day === 1 ? weekend : day
+
+    console.log(latestDay)
+    const month = (today.getMonth() + 1).length > 1 ? (today.getMonth() + 1) : "0" + (today.getMonth() + 1);
+    const formatted = today.getFullYear() + "-" + month + "-" +  latestDay
+    
+
+    fetch(`https://www.bankofcanada.ca/valet/observations/FXUSDCAD/json?start_date=${formatted}&end_date=${formatted}`, {             
     })
     .then(res => res.json())
     .then(result => {      
+      console.log(result)
       this.setState({
-        euroToUsd: result.rates.USD,
-        euroToCad: result.rates.CAD,        
-      }) 
-    })
-    .then(() => {
-      const w = 1 / this.state.euroToCad
-      const x = this.state.euroToUsd / this.state.euroToCad
-      const y = this.state.euroToCad / this.state.euroToUsd
-      const z = 1 / this.state.euroToUsd
-      
-      this.setState({ 
-        cadToEuro: w,
-        cadToUsd: x,
-        usdToCad: y,
-        usdToEuro: z
+        usdToCad: result.observations[0].FXUSDCAD.v               
       })
-    })    
+    
+    })
+    .then(() => { 
+      const w = 1 / this.state.usdToCad
+      console.log(w)
+      this.setState({
+        cadToUsd: w
+      })
+    })
     .catch(error => console.error('Error', error))
+    
+    fetch(`https://www.bankofcanada.ca/valet/observations/FXEURCAD/json?start_date=${formatted}&end_date=${formatted}`, {             
+    })
+    .then(res => res.json())
+    .then(result => {      
+      console.log(result)
+      this.setState({
+        euroToCad: result.observations[0].FXEURCAD.v               
+      })
+    
+    })
+    .then(() => { 
+      const w = 1 / this.state.euroToCad
+      const u = this.state.usdToCad / this.state.euroToCad
+      const e = this.state.euroToCad / this.state.usdToCad
+      console.log(w)
+      this.setState({
+        cadToEuro: w,
+        usdToEuro: u,
+        euroToUsd: e
+      })
+    })
+    .catch(error => console.error('Error', error))
+    // fetch(`http://data.fixer.io/api/latest?access_key=aa139048e9c95de99e9b37afc4acdf15&symbols=USD,CAD`, {
+    // })
+    // .then(res => res.json())
+    // .then(result => {      
+    //   this.setState({
+    //     euroToUsd: result.rates.USD,
+    //     euroToCad: result.rates.CAD,        
+    //   }) 
+    // })
+    // .then(() => {
+    //   const w = 1 / this.state.euroToCad
+    //   const x = this.state.euroToUsd / this.state.euroToCad
+    //   const y = this.state.euroToCad / this.state.euroToUsd
+    //   const z = 1 / this.state.euroToUsd
+      
+    //   this.setState({ 
+    //     cadToEuro: w,
+    //     cadToUsd: x,
+    //     usdToCad: y,
+    //     usdToEuro: z
+    //   })
+    // })    
+    // .catch(error => console.error('Error', error))
   }
 
   handleInputChange = e => {
