@@ -12,12 +12,12 @@ class Converter extends Component {
   componentDidMount() { 
     const today = new Date()
     let date = today.getDate()
-    const day = today.getUTCDay() 
+    const day = today.getDay() 
     console.log(day)
-    let sundays = day === 0 && day !== 6 ? date - 2 : day
-    let saturdays = day === 6 && day !== 0 ? date - 1 : day
+    let sundays = day === 0 && day !== 6 ? date - 2 : date
+    let saturdays = day === 6 && day !== 0 ? date - 1 : date
     let weekend = day === 0 ? sundays : saturdays;
-    let latestDay = day === 0 || day === 1 ? weekend : day
+    let latestDay = day === 0 || day === 6 ? weekend : date
 
     console.log(latestDay)
     const month = (today.getMonth() + 1).length > 1 ? (today.getMonth() + 1) : "0" + (today.getMonth() + 1);
